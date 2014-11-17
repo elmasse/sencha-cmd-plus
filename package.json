@@ -1,0 +1,17 @@
+{
+  "name": "cmd-plus",
+  "version": "1.0.0",
+  "description": "",
+  "bin": {
+    "cmd-plus": "./bin/cmd-plus"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Maximiliano Fierro",
+  "license": "MIT",
+  "dependencies": {
+    "cocktail": "^0.5.3",
+    "glob": "^4.0.6"
+  }
+}
