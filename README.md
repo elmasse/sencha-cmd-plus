@@ -10,7 +10,7 @@ This is just a wrapper for `sencha` so you can use it transparently, just change
 Just install cmd-plus as a global module (by now is only available from github repo):
 
 ```
-sudo npm install -g git://github.com/elmasse/sencha-cmd-plus.git
+$ sudo npm install -g git://github.com/elmasse/sencha-cmd-plus.git
 ```
 
 You need to have the same cmd version installed (in this version in the default installation folder).
@@ -18,13 +18,21 @@ You need to have the same cmd version installed (in this version in the default 
 You can check your installed versions with:
 
 ```
-cmd-plus list
+$ cmd-plus list
+4.0.0.161
+4.0.3.74
+4.0.4.84
+5.0.0.114
+5.0.0.160
+5.0.1.231
+5.0.2.274
+5.0.3.324
 ```
 
-running any other sencha cmd command is transparently:
+running any other sencha cmd command is transparent:
 
 ```
-cmd-plus which
+$ cmd-plus which
 ```
 
-This will execute the current installed `sencha which` command. But, if you are under an sencha touch / extjs root app folder it will read the ./.sencha/app/sencha.cfg file and use the cmd version from it to localize the right version.
+This will execute the current installed `sencha which` command. But, if you are under a sencha touch / extjs root app folder it will read the ./.sencha/app/sencha.cfg file and use the cmd version from it. If it is not installed it will default to the latest version.
