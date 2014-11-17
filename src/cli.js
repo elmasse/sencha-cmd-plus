@@ -3,13 +3,12 @@
 var cocktail = require('cocktail');
 
 var senchaCmd  = require('./cmd/sencha'); 
-var listCmd  = require('./cmd/list');
+var listCmd    = require('./cmd/list');
+var noOpCmd    = require('./cmd/noop.js');
 
-function noOp(){}
-noOp.prototype.run = function(){};
-
+//TODO: Review this, maybe using nopts
 var CMD_OPTIONS = {
-    'use'  : [noOp],
+    'use'  : [noOpCmd],
     'list' : [listCmd]
 };
 
