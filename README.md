@@ -15,6 +15,8 @@ $ sudo npm install -g git://github.com/elmasse/sencha-cmd-plus.git
 
 You need to have the same cmd version installed (in this version in the default installation folder).
 
+## Usage
+
 You can check your installed versions with:
 
 ```
