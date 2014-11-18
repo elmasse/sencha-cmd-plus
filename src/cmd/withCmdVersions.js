@@ -26,7 +26,7 @@ cocktail.mix({
 
          return fs.readdirSync(bin)
             .filter(function(item){
-                return item !== 'repo';
+                return item.indexOf('.') > 0;
             });
     },
 
