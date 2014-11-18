@@ -17,6 +17,7 @@ You need to have the same cmd version installed (in this version in the default 
 
 ## Usage
 
+### list
 You can check your installed versions with:
 
 ```
@@ -31,7 +32,15 @@ $ cmd-plus list
 5.0.3.324
 ```
 
-running any other sencha cmd command is transparent:
+### use [version] {sencha cmd options}
+This will generate a new app using cmd version 4.0.4.84
+
+```
+$ cmd-plus use 4.0.4.84 -sdk ../touch-2.4.0 generate app MyApp MyApp
+```
+
+### sencha
+Running any other sencha cmd command is transparent:
 
 ```
 $ cmd-plus which
