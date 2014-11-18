@@ -1,9 +1,10 @@
 'use strict';
 
-var cocktail  = require('cocktail');
-var withSpawn = require('./withSpawn');
+var cocktail        = require('cocktail');
+var fs              = require('fs');
+
+var withSpawn       = require('./withSpawn');
 var withCmdVersions = require('./withCmdVersions');
-var fs = require('fs');
 
 /**
  * @trait

@@ -1,6 +1,7 @@
 'use strict';
 
-var cocktail = require('cocktail');
+var cocktail        = require('cocktail');
+
 var withCmdVersions = require('./withCmdVersions');
 
 cocktail.mix({
