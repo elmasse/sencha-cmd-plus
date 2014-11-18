@@ -14,7 +14,7 @@ cocktail.mix({
 
     run: function () {
         this.retrieveCmdVersions()
-            .map(function(item){
+            .forEach(function(item){
                 console.log(item);
             });
     }
