@@ -1,14 +1,16 @@
 'use strict';
 
-var cocktail = require('cocktail');
+var cocktail   = require('cocktail');
 
 var senchaCmd  = require('./cmd/sencha'); 
 var listCmd    = require('./cmd/list');
+var useCmd     = require('./cmd/use');
 var noOpCmd    = require('./cmd/noop.js');
 
 //TODO: Review this, maybe using nopts
 var CMD_OPTIONS = {
-    'use'  : [noOpCmd],
+    'noop' : [noOpCmd],
+    'use'  : [useCmd],
     'list' : [listCmd]
 };
 
