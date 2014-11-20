@@ -4,8 +4,8 @@ var cocktail        = require('cocktail');
 var path            = require('path');
 var fs              = require('fs');
 
-var withSpawn       = require('./withSpawn');
-var withCmdVersions = require('./withCmdVersions');
+var withSpawn  = require('./withSpawn');
+var withCmdBin = require('./withCmdBin');
 
 cocktail.mix({
     '@exports': module,
@@ -17,26 +17,29 @@ cocktail.mix({
 
     '@traits': [
         withSpawn,
-        withCmdVersions
+        withCmdBin
     ],
 
-    resolveCmd: function () {
-        var fromCfg = this.retrieveFromArgs(),
-            cmd = 'sencha';
 
-        if (fromCfg && fs.existsSync(fromCfg)) {
-            cmd = fromCfg;
+    run: function () {
+        var me   = this,
+            args = me.getArgs(),
+            opts = args.splice(0,2),
+            bin  = me.retrieveCmdBinPath(),
+            ver  = opts.pop(),
+            cmd  = path.join(bin, ver, 'sencha');
+
+        if (!fs.existsSync(cmd)) {
+            return me.onNoVersionInstalled(ver);
         }
 
-        return cmd;
+        me.runSpawn(cmd, args);
+
     },
 
-    retrieveFromArgs: function () {
-        var args    = this.getArgs().splice(0,2),
-            bin     = this.retrieveCmdBinPath();
-
-        return path.join(bin, args.pop(), 'sencha');
-
+    onNoVersionInstalled: function(ver) {
+        console.error('Sencha Cmd v' + ver + ' is not installed');
     }
+
 
 });

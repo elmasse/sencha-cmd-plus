@@ -8,15 +8,22 @@ cocktail.mix({
     '@exports': module,
     '@as': 'class',
 
-    '@requires': ['getUserHome'],
-
-    '@traits': [withCmdVersions],
+    '@traits': [
+        withCmdVersions
+    ],
 
     run: function () {
-        this.retrieveCmdVersions()
-            .forEach(function(item){
-                console.log(item);
-            });
+        this.retrieveCmdVersions();
+    },
+
+    onVersionsAvailable: function(versions) {
+        versions.forEach(function(version){
+            console.log(version);
+        });
+    },
+
+    onNoVersionsAvailable: function () {
+        console.error('No Sencha Cmd versions found');
     }
 
 });

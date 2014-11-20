@@ -1,7 +1,6 @@
 'use strict';
 
 var cocktail        = require('cocktail');
-var fs              = require('fs');
 
 var withSpawn       = require('./withSpawn');
 var withCmdVersions = require('./withCmdVersions');
@@ -18,15 +17,19 @@ cocktail.mix({
         withCmdVersions
     ],
 
-    resolveCmd: function () {
-        var fromCfg = this.retrieveFromSechaCfg(),
-            cmd = 'sencha';
+    run: function () {
+        this.retrieveFromSechaCfg();
+    },  
 
-        if (fromCfg && fs.existsSync(fromCfg)) {
-            cmd = fromCfg;
-        }
+    onNoVersionsAvailable: function () {
+        var args = this.getArgs();
+        this.runSpawn('sencha', args);
+    },
 
-        return cmd;
+    onVersionsAvailable: function (versions) {
+        var cmd = versions[0],
+            args = this.getArgs();
+
+        this.runSpawn(cmd, args);
     }
-
 });

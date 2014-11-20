@@ -8,18 +8,11 @@ cocktail.mix({
     '@as': 'class',
 
     '@requires': [
-        'resolveCmd',
         'getArgs'
     ],
 
-    run: function () {
-        var me = this,
-            which = me.resolveCmd(),
-            args  = me.getArgs();
-        
-        console.log('running:', which + ' ' +  args);
-        me._attachSpawnListeners(spawn(which, args));
-
+    runSpawn: function (which, args) {
+        this._attachSpawnListeners(spawn(which, args));
     },
 
     _attachSpawnListeners: function (spawn) {
@@ -33,10 +26,10 @@ cocktail.mix({
     },
 
     _onProgress: function (data) {
-        console.log('>' + data);
+        console.log('' + data);
     },
 
     _onError: function (data) {
-        console.log('error: ' + data);
+        console.error('Error: ' + data);
     }   
 });

@@ -6,7 +6,7 @@ cocktail.mix({
     '@exports': module,
     '@as': 'class',
 
-    getUserHome: function() {
+    getUserHome: function () {
         return process.env.HOME || process.env.HOMEPATH || process.env.USERPROFILE;
     }
 });

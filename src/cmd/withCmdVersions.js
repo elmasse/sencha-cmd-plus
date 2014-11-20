@@ -1,54 +1,70 @@
 'use strict';
 
-var cocktail = require('cocktail');
-var fs       = require('fs');
-var path     = require('path');
-var glob     = require('glob');
+var cocktail  = require('cocktail');
+var fs        = require('fs');
+var path      = require('path');
+var glob      = require('glob');
 
-var withUserHome = require('./withUserHome');
+var withCmdBin = require('./withCmdBin');
 
 cocktail.mix({
-    '@exports': module,
-    '@as': 'class',
+    '@exports'  : module,
+    '@as'       : 'class',
 
-    '@traits': [withUserHome],
+    '@requires' : [
+        'onVersionsAvailable',
+        'onNoVersionsAvailable'
+    ],
 
-    retrieveCmdBinPath: function () {
-        var home = path.normalize(this.getUserHome()),
-            bin  = path.join(home, './bin/Sencha/Cmd');
-
-        return bin;
-    },
-
+    '@traits': [withCmdBin],
 
     retrieveCmdVersions: function () {
-        var bin = this.retrieveCmdBinPath();
+        var me = this,
+            bin = me.retrieveCmdBinPath();
 
-         return fs.readdirSync(bin)
-            .filter(function(item){
+        fs.readdir(bin, function(err, files){
+            var filtered;
+
+            if (err) {
+                return me.onNoVersionsAvailable();    
+            }
+
+            filtered = files.filter(function(item){
                 return item.indexOf('.') > 0;
             });
+
+            me.onVersionsAvailable(filtered);
+
+        });
     },
+
 
     retrieveFromSechaCfg: function () {
-        var cfg;
+        var me = this;
 
-        cfg = glob.sync('./.sencha/**/sencha.cfg', {});
+        glob('./.sencha/**/sencha.cfg', {}, function(err, files) {
+ 
+            if (err || !files.length) {
+                return me.onNoVersionsAvailable(); 
+            }
 
-        return cfg.length && this.readCmdVersionFromCfg(cfg[0]); 
+            fs.readFile(files[0], {encoding:'utf8'}, function(err, content){
+               var  bin  = me.retrieveCmdBinPath(),
+                    regex = /(?:(?:app|workspace)\.cmd\.version=)(\S*)/,
+                    match, cmd;   
 
-    },
+                if (err) {
+                    return me.onNoVersionsAvailable(); 
+                } 
 
-    readCmdVersionFromCfg: function (pathToCfg) {
-        var bin  = this.retrieveCmdBinPath(),
-            cfg  = fs.readFileSync(pathToCfg, {encoding:'utf8'}),
-            regex = /(?:(?:app|workspace)\.cmd\.version=)(\S*)/,
-            match, cmd;
+                match = content.match(regex);
+                cmd = match && path.join(bin, match.pop(), 'sencha');
 
-        match = cfg.match(regex);
-        cmd = match && path.join(bin, match.pop(), 'sencha');
+                me.onVersionsAvailable([cmd]);
+            });
 
-        return cmd;
+        });
+
     }
 
 });
