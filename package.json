@@ -19,7 +19,7 @@
     }
   ],
   "dependencies": {
-    "cocktail": "^0.5.3",
+    "cocktail": "^0.6.0",
     "glob": "^4.0.6"
   }
 }
