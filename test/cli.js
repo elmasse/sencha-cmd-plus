@@ -19,6 +19,18 @@ var CMD_BIN_VERSIONS_ALL = ['repo', '.DS_Store'].concat(CMD_BIN_VERSIONS);
 
 
 describe('cmd-plus', function () {
+    
+    function mockReadDirWith(files, errors) {
+        mock_fs.readdir = function(dir, cb) {
+            return cb(errors, files);
+        };
+    }
+
+    function mockFileExistsWith(mocked) {
+        mock_fs.existsSync = function() {
+            return mocked;
+        };
+    }
 
     // CREATE --------------------------
     describe('create cli', function () {
@@ -49,36 +61,62 @@ describe('cmd-plus', function () {
     // cmd-plus list  ----------------------------
     describe('run with list option', function () {
 
-        function mockWith(files, errors) {
-            mock_fs.readdir = function(dir, cb) {
-                return cb(errors, files);
-            };
-        }
+
 
         var sut = cli.create(PROCESS_ARGV_LIST);
         var onVersionsAvailable = sinon.stub(sut, 'onVersionsAvailable');
         var onNoVersionsAvailable = sinon.stub(sut, 'onNoVersionsAvailable');
 
         it('should retrieve cmd installed list', function () {
-            mockWith(CMD_BIN_VERSIONS);
+            mockReadDirWith(CMD_BIN_VERSIONS);
             sut.run();
             expect(onVersionsAvailable).to.be.calledWith(CMD_BIN_VERSIONS);
         });
 
         it('should retrieve only cmd installed list and filter other folders like repo and hidden', function () {
-            mockWith(CMD_BIN_VERSIONS_ALL);
+            mockReadDirWith(CMD_BIN_VERSIONS_ALL);
             sut.run();
             expect(onVersionsAvailable).to.be.calledWith(CMD_BIN_VERSIONS);
         });
 
 
         it('should retrieve error if path is not found', function () {
-            mockWith(null, true);
+            mockReadDirWith(null, true);
             sut.run();
             expect(onNoVersionsAvailable).to.be.called;
         });
 
     });
 
+    // cmd-plus use  ----------------------------
+    describe('run with use option', function () {
+        
+        it('should execute cmd version installed', function () {
+            var version = 'version';
+            var sut = cli.create(PROCESS_ARGV_USE.concat([version]));
+            var runSpawn = sinon.stub(sut, 'runSpawn');    
+            var onNoVersionInstalled = sinon.stub(sut, 'onNoVersionInstalled');    
+            
+            mockFileExistsWith(true);
+            sut.run();
+            
+            expect(onNoVersionInstalled).to.not.be.called;
+            expect(runSpawn).to.be.called;
+        });
+
+        it('should abort if cmd version is not installed', function () {
+            var version = 'version';
+            var sut = cli.create(PROCESS_ARGV_USE.concat([version]));
+            var runSpawn = sinon.stub(sut, 'runSpawn');
+            var onNoVersionInstalled = sinon.stub(sut, 'onNoVersionInstalled'); 
+            
+            mockFileExistsWith(false);
+            sut.run();
+            
+            expect(runSpawn).to.not.be.called;
+            expect(onNoVersionInstalled).to.be.called;
+        });
+
+    });
 
 });
