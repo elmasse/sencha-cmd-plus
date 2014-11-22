@@ -1,5 +1,7 @@
 # Sencha Cmd Plus
 
+[![Build Status](https://travis-ci.org/elmasse/sencha-cmd-plus.svg)](https://travis-ci.org/elmasse/sencha-cmd-plus)
+
 An experiment to run the right sencha cmd version based on the current `./.sencha/{app|workspace}/sencha.cfg` file
 
 This is just a wrapper for `sencha` so you can use it transparently, just change `sencha` by `cmd-plus` and boom!
