@@ -5,13 +5,15 @@ var cocktail   = require('cocktail');
 var senchaCmd  = require('./cmd/sencha'); 
 var listCmd    = require('./cmd/list');
 var useCmd     = require('./cmd/use');
+var versionCmd = require('./cmd/version');
 var noOpCmd    = require('./cmd/noop.js');
 
 //TODO: Review this, maybe using nopts
 var CMD_OPTIONS = {
-    'noop' : [noOpCmd],
-    'use'  : [useCmd],
-    'list' : [listCmd]
+    'noop'    : [noOpCmd],
+    'use'     : [useCmd],
+    'list'    : [listCmd],
+    'version' : [versionCmd]
 };
 
 
