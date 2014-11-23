@@ -1,6 +1,7 @@
 # Sencha Cmd Plus
 
 [![Build Status](https://travis-ci.org/elmasse/sencha-cmd-plus.svg)](https://travis-ci.org/elmasse/sencha-cmd-plus)
+[![npm version](https://badge.fury.io/js/cmd-plus.svg)](http://badge.fury.io/js/cmd-plus)
 
 An experiment to run the right sencha cmd version based on the current `./.sencha/{app|workspace}/sencha.cfg` file
 
@@ -9,10 +10,10 @@ This is just a wrapper for `sencha` so you can use it transparently, just change
 
 ## Install
 
-Just install cmd-plus as a global module (by now is only available from github repo):
+Just install cmd-plus as a global module:
 
 ```
-$ sudo npm install -g git://github.com/elmasse/sencha-cmd-plus.git
+$ sudo npm install -g cmd-plus
 ```
 
 You need to have the same cmd version installed (in this version in the default installation folder).
