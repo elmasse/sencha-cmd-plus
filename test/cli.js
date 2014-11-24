@@ -14,6 +14,7 @@ var cli         = proxyquire('../src/cli', { fs: mock_fs });
 var PROCESS_ARGV_NO_ARGS = ['node', 'file'];
 var PROCESS_ARGV_LIST    = ['node', 'file', 'list'];
 var PROCESS_ARGV_USE     = ['node', 'file', 'use'];
+var PROCESS_ARGV_VERSION = ['node', 'file', 'version'];
 var CMD_BIN_VERSIONS     = ['3.0.0', '4.0.4.84', '5.0.3.253'];
 var CMD_BIN_VERSIONS_ALL = ['repo', '.DS_Store'].concat(CMD_BIN_VERSIONS);
 
@@ -51,6 +52,13 @@ describe('cmd-plus', function () {
 
         it('should create a cmd if `use` is passed as first param', function(){
             var sut = cli.create(PROCESS_ARGV_USE);
+            
+            expect(sut).to.be.defined;
+            expect(sut).to.respondTo('run');
+        });
+
+        it('should create a cmd if `version` is passed as first param', function(){
+            var sut = cli.create(PROCESS_ARGV_VERSION);
             
             expect(sut).to.be.defined;
             expect(sut).to.respondTo('run');
@@ -116,6 +124,25 @@ describe('cmd-plus', function () {
             expect(runSpawn).to.not.be.called;
             expect(onNoVersionInstalled).to.be.called;
         });
+
+    });
+
+    // cmd-plus version  ----------------------------
+    describe('run with version option', function () {
+        var sut = cli.create(PROCESS_ARGV_VERSION);
+        var pck = require('../package');
+
+        it('should display cmd-plus current version', function(){
+            var out = sinon.stub(console, 'log');
+
+            sut.run();
+
+            expect(out).to.be.calledWith('cmd-plus v'+pck.version);
+            
+            console.log.restore();
+        });
+
+        // out.restore();
 
     });
 
