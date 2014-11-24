@@ -142,8 +142,6 @@ describe('cmd-plus', function () {
             console.log.restore();
         });
 
-        // out.restore();
-
     });
 
 });
