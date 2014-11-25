@@ -5,6 +5,7 @@
   "bin": {
     "cmd-plus": "./bin/cmd-plus"
   },
+  "main": "src/cli",
   "scripts": {
     "test": "grunt test"
   },

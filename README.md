@@ -42,6 +42,14 @@ This will generate a new app using cmd version 4.0.4.84
 $ cmd-plus use 4.0.4.84 -sdk ../touch-2.4.0 generate app MyApp MyApp
 ```
 
+### version
+Returns the current cmd-plus version
+
+```
+$ cmd-plus version
+cmd-plus v1.0.0
+```
+
 ### sencha
 Running any other sencha cmd command is transparent:
 
