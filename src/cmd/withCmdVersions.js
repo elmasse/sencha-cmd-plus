@@ -49,7 +49,7 @@ cocktail.mix({
             }
 
             fs.readFile(files[0], {encoding:'utf8'}, function(err, content){
-               var  bin  = me.retrieveCmdBinPath(),
+                var bin  = me.retrieveCmdBinPath(),
                     regex = /(?:(?:app|workspace|package)\.cmd\.version=)(\S*)/,
                     match, cmd;   
 
