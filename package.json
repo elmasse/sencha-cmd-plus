@@ -1,6 +1,6 @@
 {
   "name": "cmd-plus",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Sencha Cmd Switcher.",
   "bin": {
     "cmd-plus": "./bin/cmd-plus"
