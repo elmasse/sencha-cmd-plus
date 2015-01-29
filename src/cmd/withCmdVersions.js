@@ -50,7 +50,7 @@ cocktail.mix({
 
             fs.readFile(files[0], {encoding:'utf8'}, function(err, content){
                var  bin  = me.retrieveCmdBinPath(),
-                    regex = /(?:(?:app|workspace)\.cmd\.version=)(\S*)/,
+                    regex = /(?:(?:app|workspace|package)\.cmd\.version=)(\S*)/,
                     match, cmd;   
 
                 if (err) {
