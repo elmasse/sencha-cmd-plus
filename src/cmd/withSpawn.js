@@ -18,7 +18,7 @@ cocktail.mix({
     _attachSpawnListeners: function (spawn) {
         var me = this;
         me._attachEventListener('data', spawn.stdout, me._onProgress);
-        me._attachEventListener('data', spawn.stderr, me._onError);
+        me._attachEventListener('error', spawn.stderr, me._onError);
     },
 
    _attachEventListener: function (event, stream, mthd) {

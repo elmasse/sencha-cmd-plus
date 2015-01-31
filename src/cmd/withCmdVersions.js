@@ -60,7 +60,14 @@ cocktail.mix({
                 match = content.match(regex);
                 cmd = match && path.join(bin, match.pop(), 'sencha');
 
-                me.onVersionsAvailable([cmd]);
+                if ( fs.existsSync(cmd) ) {
+                    me.onVersionsAvailable([cmd]);    
+                } else {
+                    console.log('Version: ' + match + ' not found. Using default.');
+                    me.onNoVersionsAvailable();
+                }
+
+                
             });
 
         });
