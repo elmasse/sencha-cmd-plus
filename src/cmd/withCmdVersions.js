@@ -42,7 +42,7 @@ cocktail.mix({
     retrieveFromSechaCfg: function () {
         var me = this;
 
-        glob('./.sencha/**/sencha.cfg', {}, function(err, files) {
+        glob.glob('./.sencha/**/sencha.cfg', {}, function(err, files) {
  
             if (err || !files.length) {
                 return me.onNoVersionsAvailable(); 
@@ -51,22 +51,21 @@ cocktail.mix({
             fs.readFile(files[0], {encoding:'utf8'}, function(err, content){
                 var bin  = me.retrieveCmdBinPath(),
                     regex = /(?:(?:app|workspace|package)\.cmd\.version=)(\S*)/,
-                    match, cmd;   
+                    match, cmd, version;
 
                 if (err) {
                     return me.onNoVersionsAvailable(); 
                 } 
 
                 match = content.match(regex);
-                cmd = match && path.join(bin, match.pop(), 'sencha');
+                version = match.pop();
+                cmd = match && path.join(bin, version, 'sencha');
 
                 if ( fs.existsSync(cmd) ) {
                     me.onVersionsAvailable([cmd]);    
                 } else {
-                    console.log('Version: ' + match + ' not found. Using default.');
                     me.onNoVersionsAvailable();
                 }
-
                 
             });
 

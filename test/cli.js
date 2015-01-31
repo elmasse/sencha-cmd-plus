@@ -9,12 +9,15 @@ var sinonChai   = require("sinon-chai");
 chai.use(sinonChai);
 
 var mock_fs     = { '@noCallThru': true,  '@global': true };
-var cli         = proxyquire('../src/cli', { fs: mock_fs });
+var mock_glob   = { '@noCallThru': true,  '@global': true };
+var cli         = proxyquire('../src/cli', { fs: mock_fs, glob: mock_glob });
 
 var PROCESS_ARGV_NO_ARGS = ['node', 'file'];
 var PROCESS_ARGV_LIST    = ['node', 'file', 'list'];
 var PROCESS_ARGV_USE     = ['node', 'file', 'use'];
 var PROCESS_ARGV_VERSION = ['node', 'file', 'version'];
+var PROCESS_ARGV_SENCHA  = ['node', 'file', 'which'];
+
 var CMD_BIN_VERSIONS     = ['3.0.0', '4.0.4.84', '5.0.3.253'];
 var CMD_BIN_VERSIONS_ALL = ['repo', '.DS_Store'].concat(CMD_BIN_VERSIONS);
 
@@ -31,6 +34,18 @@ describe('cmd-plus', function () {
         mock_fs.existsSync = function() {
             return mocked;
         };
+    }
+
+    function mockReadFileWith(mockedContent, error) {
+        mock_fs.readFile = function(file, opts, cb){
+            return cb(error, mockedContent);
+        }
+    }
+
+    function mockGlobWith(files, errors) {
+        mock_glob.glob = function(path, opts, cb) {
+            return cb(errors, files);
+        }
     }
 
     // CREATE --------------------------
@@ -142,6 +157,66 @@ describe('cmd-plus', function () {
             console.log.restore();
         });
 
+    });
+
+    // cmd-plus [sencha-cmd]  -----------------------
+    describe('run with a sencha cmd', function () {
+        var sut          = cli.create(PROCESS_ARGV_SENCHA),
+            noVersionSpy = sinon.stub(sut, 'onNoVersionsAvailable'),
+            versionSpy   = sinon.stub(sut, 'onVersionsAvailable');
+
+        function testUseDefaultVersion(files, content) {
+            mockGlobWith(files);
+            mockReadFileWith(content);
+            mockFileExistsWith(false);
+            
+            sut.run();
+
+            expect(noVersionSpy).to.be.called;            
+        }
+
+        function testUseVersionFromConfig(files, content) {
+            mockGlobWith(files);
+            mockReadFileWith(content);
+            mockFileExistsWith(true);
+            
+            sut.run();
+
+            expect(versionSpy).to.be.called;
+        }
+
+
+        // - default version cases
+
+        it('should execute `sencha which` with default version when no sencha.cfg file is found', function(){
+            testUseDefaultVersion([])
+        });
+
+        it('should execute `sencha which` with default version when app.cmd version from sencha.cfg file is not installed', function(){            
+            testUseDefaultVersion(['sencha.cfg'], 'app.cmd.version=version-not-found');
+        });     
+
+        it('should execute `sencha which` with default version when workspace.cmd version from sencha.cfg file is not installed', function(){
+            testUseDefaultVersion(['sencha.cfg'], 'workspace.cmd.version=version-not-found');
+        });  
+
+        it('should execute `sencha which` with default version when package.cmd version from sencha.cfg file is not installed', function(){
+            testUseDefaultVersion(['sencha.cfg'], 'package.cmd.version=version-not-found');
+        });
+
+        // - configured version cases
+
+        it('should execute `sencha which` with version in app.cmd.version from sencha.cfg file  when it is installed', function(){
+            testUseVersionFromConfig(['sencha.cfg'], 'app.cmd.version=version-found');
+        });
+
+        it('should execute `sencha which` with version in workspace.cmd.version from sencha.cfg file  when it is installed', function(){
+            testUseVersionFromConfig(['sencha.cfg'], 'workspace.cmd.version=version-found');
+        });
+
+        it('should execute `sencha which` with version in package.cmd.version from sencha.cfg file  when it is installed', function(){
+            testUseVersionFromConfig(['sencha.cfg'], 'package.cmd.version=version-found');
+        });
     });
 
 });
