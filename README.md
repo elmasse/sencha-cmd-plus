@@ -2,6 +2,7 @@
 
 [![Build Status](https://travis-ci.org/elmasse/sencha-cmd-plus.svg)](https://travis-ci.org/elmasse/sencha-cmd-plus)
 [![npm version](https://badge.fury.io/js/cmd-plus.svg)](http://badge.fury.io/js/cmd-plus)
+[![bitHound Score](https://www.bithound.io/elmasse/sencha-cmd-plus/badges/score.svg)](https://www.bithound.io/elmasse/sencha-cmd-plus)
 
 An experiment to run the right sencha cmd version based on the current `./.sencha/{app|workspace|package}/sencha.cfg` file
 
