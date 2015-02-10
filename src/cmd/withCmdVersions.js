@@ -26,7 +26,7 @@ cocktail.mix({
             var filtered;
 
             if (err) {
-                return me.onNoVersionsAvailable();    
+                return me.onNoVersionsAvailable();
             }
 
             filtered = files.filter(function(item){
@@ -43,30 +43,30 @@ cocktail.mix({
         var me = this;
 
         glob.glob('./.sencha/**/sencha.cfg', {}, function(err, files) {
- 
+
             if (err || !files.length) {
-                return me.onNoVersionsAvailable(); 
+                return me.onNoVersionsAvailable();
             }
 
-            fs.readFile(files[0], {encoding:'utf8'}, function(err, content){
+            fs.readFile(files[0], {encoding:'utf8'}, function(fileError, content){
                 var bin  = me.retrieveCmdBinPath(),
                     regex = /(?:(?:app|workspace|package)\.cmd\.version=)(\S*)/,
                     match, cmd, version;
 
-                if (err) {
-                    return me.onNoVersionsAvailable(); 
-                } 
+                if (fileError) {
+                    return me.onNoVersionsAvailable();
+                }
 
                 match = content.match(regex);
                 version = match.pop();
                 cmd = match && path.join(bin, version, 'sencha');
 
                 if ( fs.existsSync(cmd) ) {
-                    me.onVersionsAvailable([cmd]);    
+                    me.onVersionsAvailable([cmd]);
                 } else {
                     me.onNoVersionsAvailable();
                 }
-                
+
             });
 
         });

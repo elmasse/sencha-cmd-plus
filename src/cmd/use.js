@@ -24,7 +24,7 @@ cocktail.mix({
     run: function () {
         var me   = this,
             args = me.getArgs(),
-            opts = args.splice(0,2),
+            opts = args.splice(0, 2),
             bin  = me.retrieveCmdBinPath(),
             ver  = opts.pop(),
             cmd  = path.join(bin, ver, 'sencha');

@@ -19,7 +19,7 @@ cocktail.mix({
 
     run: function () {
         this.retrieveFromSechaCfg();
-    },  
+    },
 
     onNoVersionsAvailable: function () {
         var args = this.getArgs();

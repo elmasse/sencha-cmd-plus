@@ -2,7 +2,7 @@
 
 var cocktail   = require('cocktail');
 
-var senchaCmd  = require('./cmd/sencha'); 
+var senchaCmd  = require('./cmd/sencha');
 var listCmd    = require('./cmd/list');
 var useCmd     = require('./cmd/use');
 var versionCmd = require('./cmd/version');
@@ -22,7 +22,7 @@ cocktail.mix({
     '@as': 'class',
 
     '@static': {
-        
+
         create: function (args) {
             var Module  = this,
                 pargs   = args.slice(2),
@@ -53,4 +53,3 @@ cocktail.mix({
     }
 
 });
-

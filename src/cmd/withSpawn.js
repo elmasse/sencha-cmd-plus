@@ -15,10 +15,10 @@ cocktail.mix({
         this._attachSpawnListeners(spawn(which, args));
     },
 
-    _attachSpawnListeners: function (spawn) {
+    _attachSpawnListeners: function (spawnInstance) {
         var me = this;
-        me._attachEventListener('data', spawn.stdout, me._onProgress);
-        me._attachEventListener('error', spawn.stderr, me._onError);
+        me._attachEventListener('data', spawnInstance.stdout, me._onProgress);
+        me._attachEventListener('error', spawnInstance.stderr, me._onError);
     },
 
    _attachEventListener: function (event, stream, mthd) {
@@ -31,5 +31,5 @@ cocktail.mix({
 
     _onError: function (data) {
         console.error('Error: ' + data);
-    }   
+    }
 });

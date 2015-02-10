@@ -3,14 +3,14 @@
 var chai        = require('chai');
 var proxyquire  = require('proxyquire');
 var expect      = chai.expect;
-var sinon       = require("sinon");
-var sinonChai   = require("sinon-chai");
+var sinon       = require('sinon');
+var sinonChai   = require('sinon-chai');
 
 chai.use(sinonChai);
 
-var mock_fs     = { '@noCallThru': true,  '@global': true };
-var mock_glob   = { '@noCallThru': true,  '@global': true };
-var cli         = proxyquire('../src/cli', { fs: mock_fs, glob: mock_glob });
+var mockFs     = { '@noCallThru': true,  '@global': true };
+var mockGlob   = { '@noCallThru': true,  '@global': true };
+var cli         = proxyquire('../src/cli', { fs: mockFs, glob: mockGlob });
 
 var PROCESS_ARGV_NO_ARGS = ['node', 'file'];
 var PROCESS_ARGV_LIST    = ['node', 'file', 'list'];
@@ -23,29 +23,29 @@ var CMD_BIN_VERSIONS_ALL = ['repo', '.DS_Store'].concat(CMD_BIN_VERSIONS);
 
 
 describe('cmd-plus', function () {
-    
+
     function mockReadDirWith(files, errors) {
-        mock_fs.readdir = function(dir, cb) {
+        mockFs.readdir = function(dir, cb) {
             return cb(errors, files);
         };
     }
 
     function mockFileExistsWith(mocked) {
-        mock_fs.existsSync = function() {
+        mockFs.existsSync = function() {
             return mocked;
         };
     }
 
     function mockReadFileWith(mockedContent, error) {
-        mock_fs.readFile = function(file, opts, cb){
+        mockFs.readFile = function(file, opts, cb){
             return cb(error, mockedContent);
-        }
+        };
     }
 
     function mockGlobWith(files, errors) {
-        mock_glob.glob = function(path, opts, cb) {
+        mockGlob.glob = function(path, opts, cb) {
             return cb(errors, files);
-        }
+        };
     }
 
     // CREATE --------------------------
@@ -53,38 +53,36 @@ describe('cmd-plus', function () {
 
         it('should create a cmd if no args are passed', function(){
             var sut = cli.create(PROCESS_ARGV_NO_ARGS);
-            
+
             expect(sut).to.be.defined;
             expect(sut).to.respondTo('run');
         });
 
         it('should create a cmd if `list` is passed as first param', function(){
             var sut = cli.create(PROCESS_ARGV_LIST);
-            
+
             expect(sut).to.be.defined;
             expect(sut).to.respondTo('run');
         });
 
         it('should create a cmd if `use` is passed as first param', function(){
             var sut = cli.create(PROCESS_ARGV_USE);
-            
+
             expect(sut).to.be.defined;
             expect(sut).to.respondTo('run');
         });
 
         it('should create a cmd if `version` is passed as first param', function(){
             var sut = cli.create(PROCESS_ARGV_VERSION);
-            
+
             expect(sut).to.be.defined;
             expect(sut).to.respondTo('run');
         });
 
-    });  
+    });
 
     // cmd-plus list  ----------------------------
     describe('run with list option', function () {
-
-
 
         var sut = cli.create(PROCESS_ARGV_LIST);
         var onVersionsAvailable = sinon.stub(sut, 'onVersionsAvailable');
@@ -113,16 +111,16 @@ describe('cmd-plus', function () {
 
     // cmd-plus use  ----------------------------
     describe('run with use option', function () {
-        
+
         it('should execute cmd version installed', function () {
             var version = 'version';
             var sut = cli.create(PROCESS_ARGV_USE.concat([version]));
-            var runSpawn = sinon.stub(sut, 'runSpawn');    
-            var onNoVersionInstalled = sinon.stub(sut, 'onNoVersionInstalled');    
-            
+            var runSpawn = sinon.stub(sut, 'runSpawn');
+            var onNoVersionInstalled = sinon.stub(sut, 'onNoVersionInstalled');
+
             mockFileExistsWith(true);
             sut.run();
-            
+
             expect(onNoVersionInstalled).to.not.be.called;
             expect(runSpawn).to.be.called;
         });
@@ -131,11 +129,11 @@ describe('cmd-plus', function () {
             var version = 'version';
             var sut = cli.create(PROCESS_ARGV_USE.concat([version]));
             var runSpawn = sinon.stub(sut, 'runSpawn');
-            var onNoVersionInstalled = sinon.stub(sut, 'onNoVersionInstalled'); 
-            
+            var onNoVersionInstalled = sinon.stub(sut, 'onNoVersionInstalled');
+
             mockFileExistsWith(false);
             sut.run();
-            
+
             expect(runSpawn).to.not.be.called;
             expect(onNoVersionInstalled).to.be.called;
         });
@@ -152,8 +150,8 @@ describe('cmd-plus', function () {
 
             sut.run();
 
-            expect(out).to.be.calledWith('cmd-plus v'+pck.version);
-            
+            expect(out).to.be.calledWith('cmd-plus v' + pck.version);
+
             console.log.restore();
         });
 
@@ -169,17 +167,17 @@ describe('cmd-plus', function () {
             mockGlobWith(files);
             mockReadFileWith(content);
             mockFileExistsWith(false);
-            
+
             sut.run();
 
-            expect(noVersionSpy).to.be.called;            
+            expect(noVersionSpy).to.be.called;
         }
 
         function testUseVersionFromConfig(files, content) {
             mockGlobWith(files);
             mockReadFileWith(content);
             mockFileExistsWith(true);
-            
+
             sut.run();
 
             expect(versionSpy).to.be.called;
@@ -189,16 +187,16 @@ describe('cmd-plus', function () {
         // - default version cases
 
         it('should execute `sencha which` with default version when no sencha.cfg file is found', function(){
-            testUseDefaultVersion([])
+            testUseDefaultVersion([]);
         });
 
-        it('should execute `sencha which` with default version when app.cmd version from sencha.cfg file is not installed', function(){            
+        it('should execute `sencha which` with default version when app.cmd version from sencha.cfg file is not installed', function(){
             testUseDefaultVersion(['sencha.cfg'], 'app.cmd.version=version-not-found');
-        });     
+        });
 
         it('should execute `sencha which` with default version when workspace.cmd version from sencha.cfg file is not installed', function(){
             testUseDefaultVersion(['sencha.cfg'], 'workspace.cmd.version=version-not-found');
-        });  
+        });
 
         it('should execute `sencha which` with default version when package.cmd version from sencha.cfg file is not installed', function(){
             testUseDefaultVersion(['sencha.cfg'], 'package.cmd.version=version-not-found');

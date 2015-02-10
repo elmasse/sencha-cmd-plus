@@ -8,6 +8,6 @@ cocktail.mix({
     '@as': 'class',
 
     run: function () {
-        console.log('cmd-plus v'+pkg.version);
+        console.log('cmd-plus v' + pkg.version);
     }
 });
